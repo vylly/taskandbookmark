@@ -1,9 +1,13 @@
+import { Main } from "@/modules/main/view";
+
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <>{children}</>
+    <Main>
+      {children}
+    </Main>
   );
 }

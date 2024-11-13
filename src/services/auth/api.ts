@@ -7,7 +7,6 @@ const route = 'http://localhost:3001/' + 'auth'
 
 export const signup = async (newUser: NewUser) => {
   const res = await request({route: `${route}/signup`, method: 'POST', body: newUser})
-  console.log('res: ', res)
   if(res['access_token']){
     Cookies.set("vyllyToken", JSON.stringify({
       accessToken: res['access_token'],
@@ -19,7 +18,6 @@ export const signup = async (newUser: NewUser) => {
 
 export const login = async (user: LoginData) => {
   const res = await request({route: `${route}/login`, method: 'POST', body: user})
-  console.log('res: ', res)
   if(res['access_token']){
     Cookies.set("vyllyToken", JSON.stringify({
       accessToken: res['access_token'],
@@ -31,7 +29,6 @@ export const login = async (user: LoginData) => {
 
 export const logout = async () => {
   const res = await request({route: `${route}/logout`, method: 'POST', body: {}})
-  console.log('res: ', res)
   Cookies.remove("vyllyToken")
   return res
 }

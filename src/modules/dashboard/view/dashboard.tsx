@@ -55,6 +55,10 @@ export const DashboardView = () => {
     setFilterBookmarkData(newBookmarksData)
   }, [bookmarksData, filteredCategories])
 
+  useEffect(() => {
+    console.log(document.cookie)
+  }, [])
+
   return (
     <div className="Dashboard w-full p-8 flex flex-col items-start gap-4">
       <div className="w-full flex items-center justify-between">
