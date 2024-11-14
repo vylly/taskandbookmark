@@ -7,23 +7,20 @@ import { Button } from "@/components/ui/button"
 
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { BookmarkData } from "../view/dashboard"
-import { Input } from "@/components/ui/input"
-import { CategorySelectorMenu } from "./category-selector-menu"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { TabsContent } from "@radix-ui/react-tabs"
+import { NewCategory } from "./new-category"
+import { NewBookmark } from "./new-bookmark"
+import { CreateBookmarkData } from "@/services/bookmarks/types"
+import { Category } from "@/services/categories/types"
 
-export function AddCategoryOrBookmarkMenu({categories, onAddCategory, onAddBookmark}: {categories: {[categoryName: string]: boolean}, onAddCategory: (name: string) => void, onAddBookmark: (bookmark: BookmarkData) => void}) {
-  const [newCategoryValue, setNewCategoryValue] = React.useState('')
-  const [newBookmarkLinkValue, setNewBookmarkLinkValue] = React.useState('')
-  const [newBookmarkNameValue, setNewBookmarkNameValue] = React.useState('')
-  const [newBookmarkCategory, setNewBookmarkCategory] = React.useState('all')
-
+export function AddCategoryOrBookmarkMenu({categories, onAddCategory, onAddBookmark}: {categories: Category[], onAddCategory: (name: string, color: string) => void, onAddBookmark: (bookmark: CreateBookmarkData) => void}) { 
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -33,51 +30,23 @@ export function AddCategoryOrBookmarkMenu({categories, onAddCategory, onAddBookm
       </DialogTrigger>
       <DialogContent className="flex flex-col gap-4">
         <DialogHeader>
-          <DialogTitle>Bookmark / bookrmak category</DialogTitle>
+          <DialogTitle>Bookmark / Category</DialogTitle>
           <DialogDescription>
-            Add bookmark or bookmark category
+            Create a new bookmark or a new category for the current group
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-2">
-          <span className="self-start">New bookmark category</span>
-          <div className="flex gap-2 items-center">
-            <Input placeholder="Category name" value={newCategoryValue} onChange={(ev) => setNewCategoryValue(ev.target.value)}/>
-            <DialogClose asChild>
-              <Plus className="h-[1.2rem] w-[1.2rem]" onClick={() => {
-                onAddCategory(newCategoryValue)
-                setNewCategoryValue('')
-              }}/>
-            </DialogClose>
-          </div>
-          
-        </div>
-        <div onFocus={(ev) => ev.stopPropagation()} className="flex flex-col gap-2 items-start">
-          <span className="self-start">New bookmark</span>
-          <CategorySelectorMenu selectedCategory={newBookmarkCategory} categories={categories} onSelect={(category) => setNewBookmarkCategory(category)}/>
-          <div className="flex w-full gap-2 items-center">
-            <Input placeholder="Name" onClick={(ev) => {ev.stopPropagation()}} value={newBookmarkNameValue} onChange={(ev) => setNewBookmarkNameValue(ev.target.value)}/>
-            <Plus className="invisible h-[1.2rem] w-[1.2rem]"/>
-          </div>
-          
-          <div className="flex w-full gap-2 items-center">
-            <Input onFocusCapture={(ev) => ev.stopPropagation()} placeholder="Link" onClick={(ev) => {ev.stopPropagation()}} value={newBookmarkLinkValue} onChange={(ev) => setNewBookmarkLinkValue(ev.target.value)}/>
-            <DialogClose asChild>
-              <Plus className="h-[1.2rem] w-[1.2rem]" onClick={() => {
-                onAddBookmark({
-                  id: crypto.randomUUID(),
-                  type: 'bookmark',
-                  category: newBookmarkCategory,
-                  private: true,
-                  title: newBookmarkNameValue,
-                  content: newBookmarkLinkValue
-                })
-                setNewBookmarkNameValue('')
-                setNewBookmarkLinkValue('')
-                setNewBookmarkCategory('all')
-              }}/>
-            </DialogClose>
-          </div>
-        </div>
+        <Tabs defaultValue="bookmark">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="bookmark">bookmark</TabsTrigger>
+            <TabsTrigger value="category">category</TabsTrigger>
+          </TabsList>
+          <TabsContent value="bookmark" className="pt-4">
+            <NewBookmark categories={categories} onAddBookmark={onAddBookmark}/>
+          </TabsContent>
+          <TabsContent value="category" className="pt-4">
+            <NewCategory onAddCategory={onAddCategory}/>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   )

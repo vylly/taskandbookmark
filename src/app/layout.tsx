@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "react-hot-toast";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: "Font & Bookmark",
@@ -24,8 +25,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
-            <Toaster />
-            {children}
+            <TooltipProvider>
+              <Toaster />
+              {children}
+            </TooltipProvider>
           </ThemeProvider>
         </body>
       </html>

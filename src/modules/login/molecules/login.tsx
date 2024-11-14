@@ -53,7 +53,7 @@ export function Login() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter username" {...field} />
+                    <Input placeholder="Enter username" {...field}/>
                   </FormControl>
                   <FormDescription>
                     This is your public display name & way of loggin in.

@@ -4,8 +4,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { Login } from "./molecules/login"
-import { Signup } from "./molecules/signup"
+import { Login } from "../molecules/login"
+import { Signup } from "../molecules/signup"
 
 export function LoginView() {
   return (

@@ -13,9 +13,13 @@ export default async function Page() {
 
   const currGroupId = vyllyCurrentGroup
 
-  if(currGroupId && allGroups.map((group: Group) => {
+  console.log('find', allGroups.find((group: Group) => {
     return currGroupId === group.id.toString()
-  }).length){
+  }))
+
+  if(currGroupId && allGroups.find((group: Group) => {
+    return currGroupId === group.id.toString()
+  })){
     redirect(`/dashboard/${currGroupId}`)
   }
 

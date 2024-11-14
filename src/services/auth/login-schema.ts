@@ -7,7 +7,7 @@ const passwordRegEx =
 
 export const LoginSchema = z.object({
   username: z.string({ invalid_type_error, required_error }).min(3, 'Value is too short'),
-  password: z.string({ invalid_type_error, required_error }).regex(passwordRegEx),
+  password: z.string({ invalid_type_error, required_error }).min(8, 'Value is too short'),
 })
 
 export type ILoginFormInput = z.infer<typeof LoginSchema>;

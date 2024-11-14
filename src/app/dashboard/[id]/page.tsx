@@ -20,7 +20,7 @@ export default async function Page({ params }: { params: Promise<{ id: number }>
   return (
     <>
       <Header currGroup={currGroup} allGroup={allGroup}/>
-      <DashboardView />
+      <DashboardView groupid={currGroup.id}/>
     </>
   );
 }
