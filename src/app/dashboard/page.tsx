@@ -6,16 +6,11 @@ import { Group } from '@/services/groups/types';
 export default async function Page() {
   const vyllyToken = JSON.parse((await cookies()).get('vyllyToken')?.value || '{}');
   const vyllyCurrentGroup = (await cookies()).get('vyllCurrentGroup')?.value;
-  console.log('vyllyCurrentGroup: ', vyllyCurrentGroup)
 
   const allGroups = await getAllForUser(vyllyToken['accessToken'])
-  console.log('allgroup:', allGroups)
+  console.log('allgroups: ', allGroups)
 
   const currGroupId = vyllyCurrentGroup
-
-  console.log('find', allGroups.find((group: Group) => {
-    return currGroupId === group.id.toString()
-  }))
 
   if(currGroupId && allGroups.find((group: Group) => {
     return currGroupId === group.id.toString()
@@ -23,5 +18,9 @@ export default async function Page() {
     redirect(`/dashboard/${currGroupId}`)
   }
 
+  if(!allGroups.length) {
+    redirect('/login')
+  }
   redirect(`/dashboard/${allGroups[0].id}`)
+  
 }

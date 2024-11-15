@@ -23,7 +23,6 @@ export const Header = (props: {currGroup: Group, allGroup: Group[]}) => {
   }
 
   const onChangeDashboard = (value: string) => {
-    console.log('value: ', value)
     router.push(`/dashboard/${value.split('_')[0]}`)
   }
 

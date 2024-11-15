@@ -1,18 +1,27 @@
 "use client"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DialogClose } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { HexColorPicker } from "react-colorful"
+import toast from "react-hot-toast"
 
 export function NewCategory ({onAddCategory}: {onAddCategory: (name: string, color: string) => void}) {
   const [color, setColor] = useState("#aabbcc");
   const [newCategoryValue, setNewCategoryValue] = useState('')
+  const handleAddCategory = () => {
+    if(!newCategoryValue) {
+      toast.error('Cannot have empty category name')
+    }
+    onAddCategory(newCategoryValue, color)
+    setNewCategoryValue('')
+  }
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-2 items-center">
+      <div className="flex flex-col gap-2 items-start">
+        <Label>Category name</Label>
         <Input placeholder="Category name (min 3 characters)" value={newCategoryValue} onChange={(ev) => setNewCategoryValue(ev.target.value)}/>
       </div>
       <div className="flex gap-4 flex-col items-start">
@@ -27,19 +36,14 @@ export function NewCategory ({onAddCategory}: {onAddCategory: (name: string, col
           </div>
         </div>
       </div>
-      {/* <DialogClose asChild> */}
-        <Button 
-          className="w-full"
-          variant='secondary'
-          disabled={newCategoryValue.length < 3}
-          onClick={() => {
-            onAddCategory(newCategoryValue, color)
-            setNewCategoryValue('')
-          }}
-        >
-          Create
-        </Button>
-      {/* </DialogClose> */}
+      <Button 
+        className="w-full"
+        variant='secondary'
+        disabled={newCategoryValue.length < 3}
+        onClick={handleAddCategory}
+      >
+        Create
+      </Button>
     </div>
   )
 }

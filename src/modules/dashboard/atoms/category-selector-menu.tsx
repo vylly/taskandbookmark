@@ -15,8 +15,8 @@ export function CategorySelectorMenu({selectedCategory, categories, onSelect}: {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="default">
-          Select one or multiple categories
+        <Button variant="outline" size="default" disabled={!categories.length}>
+          {!categories.length ? 'Create some categories first' : 'Select one or multiple categories'}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="overflow-y-scroll max-h-64 no-scrollbar">

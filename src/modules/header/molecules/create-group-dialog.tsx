@@ -28,7 +28,6 @@ export function CreateGroupDialog() {
       toast.error('failed to create a group')
     }
     router.push(`/dashboard/${res.id}`)
-    console.log('res: ', res)
   } 
 
   return (

@@ -26,7 +26,6 @@ export function Login() {
   })
 
   const onSubmit = async (data: ILoginFormInput) => {
-    console.log(data);
     const res = await login(data)
     if(!res['access_token']) {
       toast.error('Cannot login, double check your username and password and try again')

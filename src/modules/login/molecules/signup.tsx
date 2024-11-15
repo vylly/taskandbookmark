@@ -35,11 +35,9 @@ export function Signup() {
   const onSubmit = async (data: ISingUpFormInput) => {
     setIsPristine(false)
     if(!handleComfirmPassword(data.password)){
-      console.log('here')
       setPasswordMissmatch(true)
       return
     }
-    console.log(data);
     const res = await signup(data)
     if(!res['access_token']) {
       toast.error(res.message)

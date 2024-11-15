@@ -31,7 +31,6 @@ export function CategoryFilterMenu({categories, filteredCategories, onSelectNewF
                 checked={filteredCategories[category.id]}
                 onClick={(ev) => {ev.stopPropagation()}}
                 onCheckedChange={() => {
-                  console.log(category.id)
                   onSelectNewFilter(category.id)
                 }}
               />

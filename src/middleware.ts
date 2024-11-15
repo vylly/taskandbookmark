@@ -9,6 +9,20 @@ export function middleware(request: NextRequest) {
   const userToken = request.cookies.get("vyllyToken")?.value;
   const response = NextResponse.next()
 
+  if(request.nextUrl.pathname === '/login') {
+    request.cookies.delete("vyllyToken");
+    response.cookies.delete("vyllyToken");
+
+    return response
+  }    
+
+  if(request.nextUrl.pathname === '/') {
+    if(userToken) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+    return NextResponse.redirect(new URL("/login", request.url));
+  }    
+
   if (
     protectedRoutes.includes(request.nextUrl.pathname) &&
     (!userToken || new Date().getTime() > new Date(JSON.parse(userToken).expiredAt).getTime())
@@ -21,7 +35,6 @@ export function middleware(request: NextRequest) {
   }
 
   if(request.nextUrl.pathname.startsWith('/dashboard/')) {
-    console.log('bla')
     response.cookies.set("vyllCurrentGroup", request.nextUrl.pathname.split('/')[2]);
     return response
   }

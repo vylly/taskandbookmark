@@ -28,7 +28,7 @@ export const login = async (user: LoginData) => {
 }
 
 export const logout = async () => {
-  const res = await request({route: `${route}/logout`, method: 'POST', body: {}})
   Cookies.remove("vyllyToken")
+  const res = await request({route: `${route}/logout`, method: 'POST', body: {}})
   return res
 }

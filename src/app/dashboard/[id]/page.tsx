@@ -13,8 +13,6 @@ export default async function Page({ params }: { params: Promise<{ id: number }>
     notFound()
   }
   const allGroup = await getAllForUser(vyllyToken['accessToken'])
-  console.log('currGroup: ', currGroup)
-  console.log('allgroup:', allGroup);
 
 
   return (

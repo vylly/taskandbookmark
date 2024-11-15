@@ -5,8 +5,8 @@ import { Category } from "@/services/categories/types";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { BookmarkDetailsDialog } from "./bookmark-details-dialog";
 
-export const BookmarkCard = (props: {bookmark: Bookmark, categories: Category[]}) => {
-  const {bookmark, categories} = props
+export const BookmarkCard = (props: {bookmark: Bookmark, categories: Category[], handleDeleteBookmark: (bookmarkid: number) => void, handleUpdateBookmark: (updateBookmark: Bookmark) => void}) => {
+  const {bookmark, categories, handleDeleteBookmark, handleUpdateBookmark} = props
   return (
     <div className="rounded-md border px-4 py-2 font-mono text-sm shadow-sm flex flex-col gap-4">
       <div className="flex flex-nowrap gap-2 overflow-hidden overflow-ellipsis">
@@ -23,7 +23,7 @@ export const BookmarkCard = (props: {bookmark: Bookmark, categories: Category[]}
       <div className="flex w-full items-center justify-between">
         <span className="overflow-hidden">{bookmark.title}</span>
         <div className="flex gap-2 items-center justify-end">
-          <BookmarkDetailsDialog bookmark={bookmark} categories={categories}/>
+          <BookmarkDetailsDialog bookmark={bookmark} categories={categories} handleDeleteBookmark={handleDeleteBookmark} handleUpdateBookmark={handleUpdateBookmark}/>
           {bookmark.type === 'link' && (
             <Tooltip>
               <TooltipTrigger asChild>

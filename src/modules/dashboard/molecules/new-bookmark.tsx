@@ -1,13 +1,13 @@
 import { Input } from "@/components/ui/input"
 import { CategorySelectorMenu } from "../atoms/category-selector-menu"
-import { DialogClose } from "@/components/ui/dialog"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { CreateBookmarkData } from "@/services/bookmarks/types"
 import { Category } from "@/services/categories/types"
+import toast from "react-hot-toast"
 
 export function NewBookmark({categories, onAddBookmark}: {categories: Category[], onAddBookmark: (bookmark: CreateBookmarkData) => void}) {
   const [newBookmarkContentValue, setNewBookmarkContentValue] = useState('')
@@ -29,9 +29,24 @@ export function NewBookmark({categories, onAddBookmark}: {categories: Category[]
     }
   }
 
-  useEffect(() => {
-    console.log(bookmarkType)
-  }, [bookmarkType])
+  const handleAddBookmark = () => {
+    if(newBookmarkCategories.length < 1 || !newBookmarkContentValue || !newBookmarkTitleValue){
+      toast.error('Cannot have empty fields besides description (if relevant) or no category')
+      return
+    }
+    onAddBookmark({
+      type: bookmarkType,
+      categories: newBookmarkCategories,
+      title: newBookmarkTitleValue,
+      content: newBookmarkContentValue,
+      description: newBookmarkDescriptionValue
+    })
+    setNewBookmarkTitleValue('')
+    setNewBookmarkContentValue('')
+    setNewBookmarkDescriptionValue('')
+    setNewBookmarkCategories([])
+  }
+
   return (
     <div className="flex flex-col gap-4 items-start">
       <div className="flex w-full items-center justify-between">
@@ -68,38 +83,29 @@ export function NewBookmark({categories, onAddBookmark}: {categories: Category[]
           )
         })}
       </div>
-      
+      <Label>Title</Label>
       <Input placeholder="Title" value={newBookmarkTitleValue} onChange={(ev) => setNewBookmarkTitleValue(ev.target.value)}/>
       {bookmarkType === 'link' ? (
         <>
+          <Label>Link</Label>
           <Input placeholder="Link" value={newBookmarkContentValue} onChange={(ev) => setNewBookmarkContentValue(ev.target.value)} />
+          <Label>Description</Label>
           <Textarea placeholder="Description (optional)" value={newBookmarkDescriptionValue} onChange={(ev) => setNewBookmarkDescriptionValue(ev.target.value)} />
         </>
       ): (
-        <Textarea placeholder="Type your note here" value={newBookmarkContentValue} onChange={(ev) => setNewBookmarkContentValue(ev.target.value)}/>
+        <>
+          <Label>Content</Label>
+          <Textarea placeholder="Type your note here" value={newBookmarkContentValue} onChange={(ev) => setNewBookmarkContentValue(ev.target.value)} />
+        </>
       )}
-      {/* <DialogClose asChild> */}
-        <Button 
-          className="w-full"
-          variant='secondary'
-          disabled={newBookmarkTitleValue.length < 3}
-          onClick={() => {
-            onAddBookmark({
-              type: bookmarkType,
-              categories: newBookmarkCategories,
-              title: newBookmarkTitleValue,
-              content: newBookmarkContentValue,
-              description: newBookmarkDescriptionValue
-            })
-            setNewBookmarkTitleValue('')
-            setNewBookmarkContentValue('')
-            setNewBookmarkDescriptionValue('')
-            setNewBookmarkCategories([])
-          }}
-        >
-          Create
-        </Button>
-      {/* </DialogClose> */}
+      <Button 
+        className="w-full"
+        variant='secondary'
+        disabled={newBookmarkTitleValue.length < 3}
+        onClick={handleAddBookmark}
+      >
+        Create
+      </Button>
     </div>
   )
 }
