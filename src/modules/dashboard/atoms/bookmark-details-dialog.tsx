@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Bookmark } from "@/services/bookmarks/types"
 import { Category } from "@/services/categories/types"
-import { StickyNote } from "lucide-react"
+import { SquareArrowOutUpRight, StickyNote } from "lucide-react"
 import { DeleteDialog } from "@/modules/common/atoms/delete-dialog"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
@@ -27,6 +27,7 @@ export const BookmarkDetailsDialog = (props: {bookmark: Bookmark, categories: Ca
   const [newBookmarkTitleValue, setNewBookmarkTitleValue] = useState(bookmark.title)
   const [newBookmarkCategories, setNewBookmarkCategories] = useState<number[]>(bookmark.categories)
   const [isPristine, setIsPristine] = useState(true)
+  const [isEditting, setIsEditting] = useState(false)
 
   const handleDelete = () => {
     handleDeleteBookmark(bookmark.id)
@@ -59,7 +60,20 @@ export const BookmarkDetailsDialog = (props: {bookmark: Bookmark, categories: Ca
       toast.error('Cannot have empty fields besides description (if relevant) or no category')
       return
     }
+    setIsEditting(false)
     handleUpdateBookmark(updatedBm)
+  }
+
+  const handleEditMode = () => {
+    // we're cancelling
+    if(isEditting) {
+      setNewBookmarkContentValue(bookmark.content)
+      setNewBookmarkDescriptionValue(bookmark.description || '')
+      setNewBookmarkTitleValue(bookmark.title)
+      setNewBookmarkCategories(bookmark.categories)
+      setIsPristine(true)
+    }
+    setIsEditting(!isEditting)
   }
 
   return (
@@ -67,14 +81,17 @@ export const BookmarkDetailsDialog = (props: {bookmark: Bookmark, categories: Ca
       <DialogTrigger asChild>
         <Button variant="outline" size="icon"><StickyNote/></Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] p-8">
         <DialogHeader>
-          <DialogTitle>{bookmark.title}</DialogTitle>
+          <DialogTitle className="flex justify-between items-center">
+            {bookmark.title}
+            <Button size="sm" variant="outline" onClick={handleEditMode}>{isEditting ? 'Cancel' : 'Edit'}</Button>
+            </DialogTitle>
           <DialogDescription>
             View and edit your bookmark details
           </DialogDescription>
         </DialogHeader>
-        <CategorySelectorMenu selectedCategory={newBookmarkCategories} categories={categories} onSelect={handleSelectCategory}/>
+        {isEditting && <CategorySelectorMenu selectedCategory={newBookmarkCategories} categories={categories} onSelect={handleSelectCategory}/>}
         <div className="flex flex-col gap-4 items-start">
           <div className="flex flex-wrap gap-4 w-full">
             {newBookmarkCategories.map((newCat) => {
@@ -92,6 +109,7 @@ export const BookmarkDetailsDialog = (props: {bookmark: Bookmark, categories: Ca
             placeholder="Title" 
             value={newBookmarkTitleValue} 
             onChange={(ev) => {
+              if(!isEditting) return
               setIsPristine(false)
               setNewBookmarkTitleValue(ev.target.value)
             }}
@@ -99,25 +117,39 @@ export const BookmarkDetailsDialog = (props: {bookmark: Bookmark, categories: Ca
           {bookmark.type === 'link' ? (
             <>
               <Label>Link</Label>
-              <Input placeholder="Link" value={newBookmarkContentValue}
-                onChange={(ev) => {
-                  setIsPristine(false)
-                  setNewBookmarkContentValue(ev.target.value)
-                }}
-              />
-              <Label>Description</Label>
-              <Textarea placeholder="Description (optional)" value={newBookmarkDescriptionValue}
-                onChange={(ev) => {
-                  setIsPristine(false)
-                  setNewBookmarkDescriptionValue(ev.target.value)
-                }}
-              />
+              <div className="flex w-full gap-2">
+                <Input placeholder="Link" value={newBookmarkContentValue}
+                  onChange={(ev) => {
+                    if(!isEditting) return
+                    setIsPristine(false)
+                    setNewBookmarkContentValue(ev.target.value)
+                  }}
+                />
+                <Button variant="ghost" size="icon" onClick={() => {
+                    window.open(newBookmarkContentValue, "_blank");
+                  }}>
+                  <SquareArrowOutUpRight className="h-[0.8rem] w-[0.8rem]" />
+                </Button>
+              </div>
+              {newBookmarkDescriptionValue || isEditting && 
+                <>
+                  <Label>Description</Label>
+                  <Textarea placeholder="Description (optional)" value={newBookmarkDescriptionValue}
+                    onChange={(ev) => {
+                      if(!isEditting) return
+                      setIsPristine(false)
+                      setNewBookmarkDescriptionValue(ev.target.value)
+                    }}
+                  />
+                </>
+              }
             </>
           ): (
             <>
               <Label>Content</Label>
               <Textarea placeholder="Type your note here" value={newBookmarkDescriptionValue} 
                 onChange={(ev) => {
+                  if(!isEditting) return
                   setIsPristine(false)
                   setNewBookmarkContentValue(ev.target.value)
                 }}
@@ -128,9 +160,12 @@ export const BookmarkDetailsDialog = (props: {bookmark: Bookmark, categories: Ca
         <DialogFooter>
           <div className="flex w-full items-center justify-between">
             <DeleteDialog buttonTitle="Delete" deleteDescription="Are you sure you want to remove this bookmark from your group ?"  deleteAction={handleDelete}/>
-            <DialogClose asChild>
-              <Button disabled={isPristine} onClick={handleUpdate}>Save changes</Button>
-            </DialogClose>
+            {isEditting &&
+              <DialogClose asChild>
+                <Button disabled={isPristine} onClick={handleUpdate}>Save changes</Button>
+              </DialogClose>
+            }
+            
           </div>
         </DialogFooter>
       </DialogContent>
