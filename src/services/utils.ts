@@ -6,6 +6,7 @@ const headers = (token: string) => {
     Authorization: `Bearer ${token}`,
   };
 };
+export const back_route = "http://172.17.0.1:3001/";
 
 export const request = async ({
   route,
