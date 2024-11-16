@@ -28,8 +28,11 @@ export const Header = (props: {currGroup: Group, allGroup: Group[]}) => {
 
   return (
     <div className="w-full flex justify-between bg-tertiary p-8">
-      <ThemeToggle />
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex flex-1 justify-start items-center">
+        <ThemeToggle />
+      </div>
+      
+      <div className="flex flex-1 items-center justify-center gap-2">
         <Select onValueChange={onChangeDashboard}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder={currGroup.name} />
@@ -45,7 +48,7 @@ export const Header = (props: {currGroup: Group, allGroup: Group[]}) => {
         <CreateGroupDialog />
         <ShareGroupDialog currGroup={currGroup}/>
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-end">
         <Button variant="outline" onClick={handleLogout}>Logout</Button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { Subject } from 'subjecto';
 
 export const ui = {
-  $tst: new Subject<string>('test subject'),
+  $showLinks: new Subject<boolean>(true),
+  $showNotes: new Subject<boolean>(true),
 };

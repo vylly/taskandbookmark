@@ -8,12 +8,18 @@ import { createBookmark, deleteBookmarkForGroup, getAllBookmarksForGroup, update
 import { Category } from "@/services/categories/types"
 import toast from "react-hot-toast"
 import { BookmarkCard } from "../atoms/bookmark-card"
+import { Input } from "@/components/ui/input"
+import { ui } from "@/store"
 
 export const DashboardView = (props: {groupid: number}) => {
   const { groupid } = props
   const [bookmarksData, setBookmarkData] = useState<Bookmark[]>([])
   const [categoriesData, setCategoriesData] = useState<Category[]>([])
   const [filteredCategories, setFilteredCategories] = useState<{[key: number]: boolean}>({} as {[key: number]: boolean})
+  const [searchValue, setSearchValue] = useState('')
+  const [filteredBMs, setFilteredBMs] = useState<Bookmark[]>(bookmarksData)
+  const showLinks = ui.$showLinks.hook()
+  const showNotes = ui.$showNotes.hook()
 
   useEffect(() => {
     async function fetchData() {
@@ -35,6 +41,27 @@ export const DashboardView = (props: {groupid: number}) => {
     setFilteredCategories(newFilter)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoriesData])
+
+  useEffect(() => {
+    const bmData = [...bookmarksData]
+
+    const filtered = bmData.filter((bm) => {
+      return (bm.type === 'link' && showLinks) || (bm.type === 'note' && showNotes)
+    })
+
+    if(!searchValue) {
+      setFilteredBMs(filtered)
+      return
+    }
+    const filteredSearch = filtered.filter((bm) => {
+      return bm.title.includes(searchValue)
+    })
+    if(!filteredSearch) { 
+      setFilteredBMs([])
+      return
+    }
+    setFilteredBMs(filteredSearch)
+  }, [searchValue, bookmarksData, showLinks, showNotes])
 
   const handleAddNewCategory = async (name: string, color: string) => {
     setFilteredCategories({...filteredCategories, [name]: true})
@@ -96,14 +123,17 @@ export const DashboardView = (props: {groupid: number}) => {
   return (
     <div className="Dashboard w-full p-8 flex flex-col items-start gap-4">
       <div className="w-full flex items-center justify-between">
-        <span>Bookmarks</span>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex flex-1 items-center justify-start gap-2">
+          Bookmarks
+        </div>
+        <Input className="w-96 flex-1" placeholder="search" value={searchValue} onChange={(ev) => setSearchValue(ev.target.value)}/>
+        <div className="flex flex-1 items-center justify-end gap-2">
           <AddCategoryOrBookmarkMenu categories={categoriesData} onAddBookmark={handleAddNewBookmark} onAddCategory={handleAddNewCategory}/>
           {categoriesData.length ? <CategoryFilterMenu categories={categoriesData} filteredCategories={filteredCategories} onSelectNewFilter={handleFilterCategorySwitch}/> : null}
         </div>
       </div>
       <div className="grid grid-cols-4 gap-4 w-full">
-        {bookmarksData && bookmarksData.map((bookmark) => {
+        {filteredBMs && filteredBMs.map((bookmark) => {
           const shouldDisplay = bookmark.categories.find((cat) => {
             return filteredCategories[cat]
           })
