@@ -8,7 +8,6 @@ export default async function Page() {
   const vyllyCurrentGroup = (await cookies()).get('vyllCurrentGroup')?.value;
 
   const allGroups = await getAllForUser(vyllyToken['accessToken'])
-  console.log('allgroups: ', allGroups)
 
   const currGroupId = vyllyCurrentGroup
 

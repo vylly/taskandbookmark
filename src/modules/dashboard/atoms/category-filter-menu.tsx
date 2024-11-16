@@ -26,7 +26,11 @@ export function CategoryFilterMenu({categories, filteredCategories, onSelectNewF
         {categories.map((category, idx) => {
           return (
             <DropdownMenuItem key={idx} className="flex justify-between">
-              <span>{category.name}</span>
+              <div className="flex gap-2 items-center">
+                <div className="w-4 h-4 rounded-full" style={{backgroundColor: category.color}}/>
+                <span>{category.name}</span>
+              </div>
+              
               <Switch
                 checked={filteredCategories[category.id]}
                 onClick={(ev) => {ev.stopPropagation()}}

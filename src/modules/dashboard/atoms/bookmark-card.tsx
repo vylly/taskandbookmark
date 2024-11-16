@@ -28,7 +28,8 @@ export const BookmarkCard = (props: {bookmark: Bookmark, categories: Category[],
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="outline" size="icon" onClick={() => {
-                  window.open(bookmark.content, "_blank");
+                  const url = !bookmark.content.startsWith('http://') && !bookmark.content.startsWith('https://') ? 'http://' + bookmark.content : bookmark.content
+                  window.open(url, "_blank");
                 }}>
                   <SquareArrowOutUpRight className="h-[0.5rem] w-[0.5rem]" />
                 </Button>

@@ -126,7 +126,8 @@ export const BookmarkDetailsDialog = (props: {bookmark: Bookmark, categories: Ca
                   }}
                 />
                 <Button variant="ghost" size="icon" onClick={() => {
-                    window.open(newBookmarkContentValue, "_blank");
+                    const url = !newBookmarkContentValue.startsWith('http://') && !newBookmarkContentValue.startsWith('https://') ? 'http://' + newBookmarkContentValue : newBookmarkContentValue
+                    window.open(url, "_blank");
                   }}>
                   <SquareArrowOutUpRight className="h-[0.8rem] w-[0.8rem]" />
                 </Button>

@@ -7,10 +7,10 @@ const required_error = 'This field cannot be blank'
 
 export const SignUpSchema = z.object({
   username: z.string({ invalid_type_error, required_error }).min(3, 'Value is too short'),
-  email: z
-    .string({ invalid_type_error, required_error })
-    .email('Please provide a valid email')
-    .min(1, 'Value is too short'),
+  // email: z
+  //   .string({ invalid_type_error, required_error })
+  //   .email('Please provide a valid email')
+  //   .min(1, 'Value is too short'),
   // password: z.string({ invalid_type_error, required_error }).regex(passwordRegEx),
   password: z.string({ invalid_type_error, required_error }).min(8, 'Value is too short'),
 })

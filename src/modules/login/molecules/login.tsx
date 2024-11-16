@@ -55,7 +55,7 @@ export function Login() {
                     <Input placeholder="Enter username" {...field}/>
                   </FormControl>
                   <FormDescription>
-                    This is your public display name & way of loggin in.
+                    Enter your username
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -71,7 +71,7 @@ export function Login() {
                     <Input placeholder="Enter password" {...field} type="password"/>
                   </FormControl>
                   <FormDescription>
-                    Choose a strong password 1small + 1capital letter + one number + one special character
+                    Enter your password
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

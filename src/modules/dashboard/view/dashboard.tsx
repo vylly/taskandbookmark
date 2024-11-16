@@ -18,9 +18,7 @@ export const DashboardView = (props: {groupid: number}) => {
   useEffect(() => {
     async function fetchData() {
       const bmData = await getAllBookmarksForGroup(groupid)
-      console.log('bmData: ', bmData)
       const categoriesData = await getAllCategoriesForGroup(groupid)
-      console.log('categoriesData: ', categoriesData)
       setBookmarkData(bmData)
       setCategoriesData(categoriesData)
     }

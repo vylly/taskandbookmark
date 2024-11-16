@@ -62,7 +62,7 @@ export function Signup() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <FormField
+            {/* <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
@@ -74,7 +74,7 @@ export function Signup() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="username"
@@ -101,7 +101,7 @@ export function Signup() {
                     <Input placeholder="Enter password" {...field} type="password"/>
                   </FormControl>
                   <FormDescription>
-                    Choose a strong password 1small + 1capital letter + one number + one special character
+                    Choose a password, 8 char min
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
