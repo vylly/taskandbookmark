@@ -1,4 +1,5 @@
-import { request, back_route } from "../utils"
+import { back_route } from "../config"
+import { request } from "../utils"
 import { Bookmark, CreateBookmarkData } from "./types"
 
 

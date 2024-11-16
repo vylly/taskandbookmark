@@ -1,4 +1,5 @@
-import { request, back_route } from "../utils"
+import { back_route } from "../config"
+import { request } from "../utils"
 const gp_route = back_route + 'groups'
 
 export const getAllForUser = async (token?: string) => {

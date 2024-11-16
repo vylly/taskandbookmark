@@ -1,4 +1,5 @@
-import { request, back_route } from "../utils"
+import { back_route } from "../config"
+import { request } from "../utils"
 const cat_route = back_route + 'categories'
 
 export const createCategory = async (name: string, groupid: number, color: string, token?: string) => {

@@ -1,4 +1,5 @@
-import { request, back_route } from "../utils"
+import { back_route } from "../config"
+import { request } from "../utils"
 import { LoginData, NewUser } from "./types"
 import Cookies from "js-cookie"
 

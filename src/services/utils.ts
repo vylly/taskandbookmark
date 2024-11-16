@@ -1,4 +1,6 @@
 import Cookies from "js-cookie"
+import { back_route } from "./config";
+// import getConfig from 'next/config';
 
 const headers = (token: string) => {
   return {
@@ -6,7 +8,9 @@ const headers = (token: string) => {
     Authorization: `Bearer ${token}`,
   };
 };
-export const back_route = "http://172.17.0.1:3001/";
+// export const back_route = "http://172.17.0.1:3001/";
+// const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
+// export const back_route = serverRuntimeConfig.apiUrl || publicRuntimeConfig.apiUrl;
 
 export const request = async ({
   route,
@@ -19,7 +23,12 @@ export const request = async ({
   body?: unknown;
   token?: string
 }) => {
+  console.log('back_route: ', back_route)
+  console.log('route: ', route)
+  console.log('body: ', body)
+  console.log('token: ', token)
   const vyllyToken = JSON.parse(Cookies.get("vyllyToken") || '{}')
+  console.log('vyllyToken: ', vyllyToken)
   return await fetch(`${route}`, {
     method,
     headers: token ? headers(token) : vyllyToken && vyllyToken.accessToken ? headers(vyllyToken.accessToken) : {'Content-Type': 'application/json'},

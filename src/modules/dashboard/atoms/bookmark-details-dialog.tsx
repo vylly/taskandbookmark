@@ -147,7 +147,7 @@ export const BookmarkDetailsDialog = (props: {bookmark: Bookmark, categories: Ca
           ): (
             <>
               <Label>Content</Label>
-              <Textarea placeholder="Type your note here" value={newBookmarkDescriptionValue} 
+              <Textarea placeholder="Type your note here" value={newBookmarkContentValue} 
                 onChange={(ev) => {
                   if(!isEditting) return
                   setIsPristine(false)
