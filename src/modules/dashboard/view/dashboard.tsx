@@ -1,8 +1,9 @@
 "use client"
 import { useEffect, useState } from "react"
 import { CategoryFilterMenu } from "../atoms/category-filter-menu"
+import { CategorySettingsDialog } from "../atoms/category-settings"
 import { AddCategoryOrBookmarkMenu } from "../molecules/add-category-or-bookmark"
-import { createCategory, getAllCategoriesForGroup } from "@/services/categories/api"
+import { createCategory, deleteCategory, getAllCategoriesForGroup, updateCategory } from "@/services/categories/api"
 import { Bookmark, CreateBookmarkData } from "@/services/bookmarks/types"
 import { createBookmark, deleteBookmarkForGroup, getAllBookmarksForGroup, updateBookmark } from "@/services/bookmarks/api"
 import { Category } from "@/services/categories/types"
@@ -66,7 +67,7 @@ export const DashboardView = (props: {groupid: number}) => {
   const handleAddNewCategory = async (name: string, color: string) => {
     setFilteredCategories({...filteredCategories, [name]: true})
     const res = await createCategory(name, groupid, color)
-    if(res.code) {
+    if(res.code || res.statusCode) {
       toast.error(res.message)
       return
     }
@@ -77,7 +78,7 @@ export const DashboardView = (props: {groupid: number}) => {
 
   const handleAddNewBookmark = async (newBookmark: CreateBookmarkData) => {
     const res = await createBookmark(newBookmark, groupid)
-    if(res.code) {
+    if(res.code || res.statusCode) {
       toast.error(res.message)
       return
     }
@@ -94,7 +95,7 @@ export const DashboardView = (props: {groupid: number}) => {
 
   const handleDeleteBookmark = async (bookmarkid: number) => {
     const res = await deleteBookmarkForGroup(groupid, bookmarkid)
-    if(res.code) {
+    if(res.code || res.statusCode) {
       toast.error(res.message)
       return
     }
@@ -105,7 +106,7 @@ export const DashboardView = (props: {groupid: number}) => {
 
   const handleUpdateBookmark = async (updatedBm: Bookmark) => {
     const res = await updateBookmark(groupid, updatedBm)
-    if(res.code) {
+    if(res.code || res.statusCode) {
       toast.error(res.message)
       return
     }
@@ -120,6 +121,34 @@ export const DashboardView = (props: {groupid: number}) => {
     setBookmarkData(newBookmarkData)
   }
 
+  const handleUpdateCategory = async (updatedCat: Category) => {
+    const res = await updateCategory(groupid, updatedCat)
+    if(res.code || res.statusCode) {
+      toast.error(res.message)
+      return
+    }
+    const newCategoriesData = [...categoriesData]
+    const catToUpdate = newCategoriesData.find(cat => cat.id === updatedCat.id)
+    if(!catToUpdate) {
+      newCategoriesData.push(updatedCat)
+      setCategoriesData(newCategoriesData)
+      return
+    }
+    Object.assign(catToUpdate, updatedCat)
+    setCategoriesData(newCategoriesData)
+  }
+
+  const handleDeleteCategory = async (catid: number) => {
+    const res = await deleteCategory(groupid, catid)
+    if(res.code || res.statusCode) {
+      toast.error(res.message)
+      return
+    }
+    const newCatData = [...categoriesData]
+    const removed = newCatData.filter((el => {return el.id !== catid}))
+    setCategoriesData(removed)
+  }
+
   return (
     <div className="Dashboard w-full p-8 flex flex-col items-start gap-4">
       <div className="w-full flex items-center justify-between">
@@ -129,7 +158,13 @@ export const DashboardView = (props: {groupid: number}) => {
         <Input className="w-96 flex-1" placeholder="search" value={searchValue} onChange={(ev) => setSearchValue(ev.target.value)}/>
         <div className="flex flex-1 items-center justify-end gap-2">
           <AddCategoryOrBookmarkMenu categories={categoriesData} onAddBookmark={handleAddNewBookmark} onAddCategory={handleAddNewCategory}/>
-          {categoriesData.length ? <CategoryFilterMenu categories={categoriesData} filteredCategories={filteredCategories} onSelectNewFilter={handleFilterCategorySwitch}/> : null}
+          {categoriesData.length ? 
+          <>
+            <CategoryFilterMenu categories={categoriesData} filteredCategories={filteredCategories} onSelectNewFilter={handleFilterCategorySwitch}/>
+            <CategorySettingsDialog categories={categoriesData} handleDeleteCategory={handleDeleteCategory} handleUpdateCategory={handleUpdateCategory}/>
+          </>
+             
+          : null}
         </div>
       </div>
       <div className="grid grid-cols-4 gap-4 w-full">
